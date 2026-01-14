@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { Eye, EyeOff, ShoppingBag, Mail, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -11,6 +12,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+    const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,14 +39,19 @@ export default function Login() {
         return;
       }
 
-      // Store returned values
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("role", data.role);
-      localStorage.setItem("name", data.name);
-
+      const userData = {
+        name: data.name,
+        email,
+        role: data.role,
+        token: data.token
+     };
+      localStorage.removeItem("user");
+      localStorage.setItem("user", JSON.stringify(userData));
+      login(userData)
       // Redirect based on role
+      console.log(data.role);
       if (data.role === "admin") {
-        navigate("/admin");
+        navigate("/admin/products");
       } else {
         navigate("/products");
       }

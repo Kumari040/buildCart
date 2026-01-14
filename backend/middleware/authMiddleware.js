@@ -6,8 +6,8 @@ const { userModel } = require('../models/user');
 async function authMiddleware(req,res,next){
     
     try{
-        const authHeader=req.headers.authorization;
-        if(!authHeader){
+        const token=req.headers.authorization;
+        if(!token){
             return res.status(401).json({
                 error:"no token"
             })

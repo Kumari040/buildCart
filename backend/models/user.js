@@ -8,16 +8,17 @@ const userSchema = new Schema({
     role: { type:String, enum:["user","admin"], default:"user" },
     cart: [
     {
-        product: { type:Schema.Types.ObjectId, ref:"Product" },
+        product: { type:Schema.Types.ObjectId, ref:"products" },
         quantity: Number
     }
     ]
 });
 
-userSchema.pre("save", async function(next){
-  if(!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
+userSchema.pre("save", async function(){
+  if(!this.isModified("password")) return ;
+  if (!this.password.startsWith("$2b$")) {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
 });
 
 const userModel=mongoose.model("user",userSchema);

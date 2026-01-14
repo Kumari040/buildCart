@@ -12,11 +12,11 @@ authRouter.post("/register", async (req,res)=>{
     if (existing) {
       return res.status(400).json({ msg: "User already exists" });
     }
-    const hashed = await bcrypt.hash(password, 10);
-    const user = await userModel.create({name,email,password:hashed,role:"user"});
+    const user = await userModel.create({name,email,password,role:"user"});
     res.json({msg:"Registered successfully"});
-  } catch {
-    res.status(400).json({msg:"User exists"});
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg:"server error"});
   }
 });
 
@@ -25,6 +25,8 @@ authRouter.post("/login", async (req,res)=>{
   const {email,password} = req.body;
   const user = await userModel.findOne({email});
   if(!user) return res.status(400).json({msg:"Invalid credentials"});
+  console.log("Password entered:", password);
+  console.log("Password hash in DB:", user.password);
 
   const match = await bcrypt.compare(password, user.password);
   if(!match) return res.status(400).json({msg:"Invalid credentials"});

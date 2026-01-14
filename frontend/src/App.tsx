@@ -6,7 +6,7 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import ProductListing from "./pages/productListing";
 import Cart from "./pages/cart";
-// import AdminProducts from "./pages/AdminProducts";
+import AdminProductManagement from "./pages/adminProductManagement";
 // import AdminOrders from "./pages/AdminOrders";
 
 export default function App() {
@@ -45,11 +45,11 @@ export default function App() {
             user?.role === "user" ? <Cart /> : <Navigate to="/products" />
           }/>
 
-          {/*<Route path="/admin/products" element={
-            user?.role === "admin" ? <AdminProducts /> : <Navigate to="/login" />
+          <Route path="/admin/products" element={
+            user?.role === "admin" ? <AdminProductManagement onLogout={logout} onViewOrders={() => {}} userName={user.name} /> : <Navigate to="/login" />
           }/>
 
-          <Route path="/admin/orders" element={
+          {/*<Route path="/admin/orders" element={
             user?.role === "admin" ? <AdminOrders /> : <Navigate to="/login" />
           }/>*/}
 

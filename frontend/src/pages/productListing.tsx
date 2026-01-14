@@ -26,6 +26,7 @@ export default function ProductListing({
   userName,
 }: ProductListingProps) {
   const navigate = useNavigate();
+  const isAdmin = userRole === "admin";
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,6 +40,8 @@ export default function ProductListing({
     try {
       const res = await fetch(`${BACKEND_URL}/api/products`);
       const data = await res.json();
+      console.log("API DATA:", data);
+
       setProducts(data);
     } catch (err) {
       console.error("Failed to fetch products", err);
@@ -53,7 +56,9 @@ export default function ProductListing({
 
   //  ADD TO CART 
   async function handleAddToCart(product: Product) {
-    const token = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
+    const user = storedUser ? JSON.parse(storedUser) : null;
+    const token= user?.token;
     if (!token) {
       navigate("/login");
       return;
@@ -118,6 +123,14 @@ export default function ProductListing({
 
             {/* User Info */}
             <div className="flex items-center gap-4">
+              {isAdmin && (
+                <button
+                    onClick={() => navigate("/admin/products")}
+                    className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-red-600 text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+                >
+                    Admin Dashboard
+                </button>
+                )}
               <div className="flex items-center gap-2 px-4 py-2 bg-red-50 rounded-lg">
                 <UserIcon className="w-5 h-5 text-red-600" />
                 <div>
@@ -199,7 +212,7 @@ export default function ProductListing({
                   <input
                     type="range"
                     min="0"
-                    max="2000"
+                    max="10000"
                     value={priceRange[1]}
                     onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
                     className="flex-1 accent-red-600"

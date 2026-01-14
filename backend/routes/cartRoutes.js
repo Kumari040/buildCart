@@ -16,7 +16,8 @@ cartRouter.post("/add", authMiddleware, async (req,res)=>{
   else user.cart.push({product:productId, quantity:1});
 
   await user.save();
-  res.json(user.cart);
+  res.json({msg:"item added to cart"});
+  
 });
 
 cartRouter.put("/update", authMiddleware, async (req,res)=>{

@@ -2,9 +2,10 @@ import { useState } from "react";
 import { AuthContext} from "./AuthContext";
 import type { User } from "./AuthContext";
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(
-    JSON.parse(localStorage.getItem("user") || "null")
-  );
+  const stored = localStorage.getItem("user");
+    const [user, setUser] = useState<User | null>(
+    stored ? JSON.parse(stored) : null
+    );
 
   const login = (data: User) => {
     setUser(data);
